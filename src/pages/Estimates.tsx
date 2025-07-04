@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { SearchIcon, ChevronDownIcon, FileSpreadsheetIcon, XIcon, PencilIcon, CopyIcon, TrashIcon, CalendarIcon } from 'lucide-react';
+import { FileTextIcon, CheckCircleIcon, ClockIcon, DollarSignIcon, SearchIcon, ChevronDownIcon, FileSpreadsheetIcon, XIcon, PencilIcon, CopyIcon, TrashIcon, CalendarIcon } from 'lucide-react';
+import { StatCard } from '../components/StatCard';
 export function Estimates() {
   const [showFilters, setShowFilters] = useState(false);
   return <div className="max-w-[1200px]">
@@ -8,13 +9,13 @@ export function Estimates() {
         {/* Affichage des totaux multi-devises */}
         <div className="bg-blue-50 border border-blue-200 rounded-md px-4 py-2 font-medium text-blue-800 flex items-center">
           <span className="mr-4">Total:</span>
-          <span className="font-bold">6 124.10 CHF</span>
+          <span className="font-bold">12,450.00 CHF</span>
           <div className="h-6 w-px bg-blue-300 mx-4"></div>
-          <span className="font-bold">2 487.35 EUR</span>
+          <span className="font-bold">2,120.50 EUR</span>
         </div>
         <div className="flex items-center gap-4">
           <div className="relative">
-            <input type="text" placeholder="Search the estimates" className="py-2 pl-4 pr-10 border rounded-md w-[300px]" />
+            <input type="text" placeholder="Search estimates" className="py-2 pl-4 pr-10 border rounded-md w-[300px]" />
             <SearchIcon className="absolute right-3 top-2.5 text-gray-400" size={18} />
             <button className="absolute right-10 top-2.5 text-gray-400" onClick={() => setShowFilters(!showFilters)}>
               <ChevronDownIcon size={18} />
@@ -24,6 +25,25 @@ export function Estimates() {
             Create estimate
           </button>
         </div>
+      </div>
+      {/* Stats Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <StatCard title="Total Estimates" value="24" icon={<FileTextIcon size={20} color="white" />} color="bg-blue-500" trend={{
+        value: '8%',
+        isPositive: true
+      }} />
+        <StatCard title="Total Value" value="$12,450" icon={<DollarSignIcon size={20} color="white" />} color="bg-green-500" trend={{
+        value: '12%',
+        isPositive: true
+      }} />
+        <StatCard title="Conversion Rate" value="68%" icon={<CheckCircleIcon size={20} color="white" />} color="bg-purple-500" trend={{
+        value: '5%',
+        isPositive: true
+      }} />
+        <StatCard title="Pending Approval" value="7" icon={<ClockIcon size={20} color="white" />} color="bg-amber-500" trend={{
+        value: '2%',
+        isPositive: false
+      }} />
       </div>
       {/* Panneau de filtres avancés */}
       {showFilters && <div className="bg-white p-6 rounded-md shadow-md border mb-4 relative">
@@ -39,15 +59,16 @@ export function Estimates() {
                 <option>All statuses</option>
                 <option>Draft</option>
                 <option>Sent</option>
-                <option>Overdue</option>
                 <option>Accepted</option>
+                <option>Declined</option>
+                <option>Expired</option>
               </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Prospect:
+                Client:
               </label>
-              <input type="text" placeholder="Prospect name" className="w-full border rounded-md px-3 py-2" />
+              <input type="text" placeholder="Client name" className="w-full border rounded-md px-3 py-2" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -105,7 +126,7 @@ export function Estimates() {
             <option>All dates</option>
           </select>
           <select className="border rounded px-2 py-1 text-sm">
-            <option>All prospects</option>
+            <option>All clients</option>
           </select>
         </div>
         {/* Bouton d'export Excel avec libellé */}
@@ -139,7 +160,7 @@ export function Estimates() {
               </th>
               <th className="text-left p-4 font-medium">
                 <div className="flex items-center">
-                  Prospect
+                  Client
                   <ChevronDownIcon size={16} className="ml-1" />
                 </div>
               </th>
@@ -155,14 +176,14 @@ export function Estimates() {
           <tbody>
             <tr className="border-b hover:bg-gray-50">
               <td className="p-4">
-                <span className="bg-red-100 text-red-600 px-3 py-1 rounded-md text-sm">
-                  Overdue
+                <span className="bg-green-100 text-green-600 px-3 py-1 rounded-md text-sm">
+                  Accepted
                 </span>
               </td>
-              <td className="p-4">2025-04-17</td>
-              <td className="p-4">1003</td>
-              <td className="p-4">test SA</td>
-              <td className="p-4">9 000.00 EUR</td>
+              <td className="p-4">2025-05-15</td>
+              <td className="p-4">EST-1003</td>
+              <td className="p-4">Acme Corp</td>
+              <td className="p-4">5,200.00 CHF</td>
               <td className="p-4">
                 <div className="flex space-x-2">
                   <button className="text-gray-400 hover:text-blue-500" title="Edit">
@@ -179,14 +200,38 @@ export function Estimates() {
             </tr>
             <tr className="border-b hover:bg-gray-50">
               <td className="p-4">
-                <span className="bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-sm">
-                  Draft
+                <span className="bg-amber-100 text-amber-600 px-3 py-1 rounded-md text-sm">
+                  Pending
                 </span>
               </td>
-              <td className="p-4">2025-04-17</td>
-              <td className="p-4">1002</td>
-              <td className="p-4">STL SA</td>
-              <td className="p-4">1 500.00 CHF</td>
+              <td className="p-4">2025-05-10</td>
+              <td className="p-4">EST-1002</td>
+              <td className="p-4">Tech Solutions</td>
+              <td className="p-4">3,450.00 CHF</td>
+              <td className="p-4">
+                <div className="flex space-x-2">
+                  <button className="text-gray-400 hover:text-blue-500" title="Edit">
+                    <PencilIcon size={16} />
+                  </button>
+                  <button className="text-gray-400 hover:text-blue-500" title="Duplicate">
+                    <CopyIcon size={16} />
+                  </button>
+                  <button className="text-gray-400 hover:text-red-500" title="Delete">
+                    <TrashIcon size={16} />
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr className="border-b hover:bg-gray-50">
+              <td className="p-4">
+                <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-md text-sm">
+                  Sent
+                </span>
+              </td>
+              <td className="p-4">2025-05-08</td>
+              <td className="p-4">EST-1001</td>
+              <td className="p-4">Global Services</td>
+              <td className="p-4">2,120.50 EUR</td>
               <td className="p-4">
                 <div className="flex space-x-2">
                   <button className="text-gray-400 hover:text-blue-500" title="Edit">
@@ -204,13 +249,13 @@ export function Estimates() {
             <tr className="border-b hover:bg-gray-50">
               <td className="p-4">
                 <span className="bg-red-100 text-red-600 px-3 py-1 rounded-md text-sm">
-                  Overdue
+                  Declined
                 </span>
               </td>
-              <td className="p-4">2025-03-04</td>
-              <td className="p-4">1001</td>
-              <td className="p-4">WeCount SA</td>
-              <td className="p-4">94.05 CHF</td>
+              <td className="p-4">2025-05-05</td>
+              <td className="p-4">EST-1000</td>
+              <td className="p-4">XYZ Industries</td>
+              <td className="p-4">3,800.00 CHF</td>
               <td className="p-4">
                 <div className="flex space-x-2">
                   <button className="text-gray-400 hover:text-blue-500" title="Edit">
