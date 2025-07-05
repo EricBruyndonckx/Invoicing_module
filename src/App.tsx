@@ -117,7 +117,7 @@ function ModuleCard({
 // Page d'accueil par défaut
 function Home() {
   const navigate = useNavigate();
-  return <div className="max-w-[1200px] w-full">
+  return <div className="w-full max-w-[1200px] mx-auto">
       <h1 className="text-2xl font-bold mb-6">Launchpad</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <ModuleCard title="Invoicing" description="Create, send and manage invoices and estimates. Track payments and generate reports." icon={<ReceiptIcon size={32} color="white" />} color="bg-blue-500" onClick={() => navigate('/invoices')} />
@@ -186,16 +186,18 @@ export function App() {
       <div className="flex w-full min-h-screen bg-gray-50">
         <Sidebar />
         <div className="flex-1 p-8">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/estimates" element={<Estimates />} />
-            <Route path="/invoices" element={<Invoices />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/contacts" element={<Contacts />} />
-            <Route path="/banking" element={<Banking />} />
-            <Route path="*" element={<Home />} />
-          </Routes>
+          <div className="w-full max-w-[1200px] mx-auto">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/estimates" element={<Estimates />} />
+              <Route path="/invoices" element={<Invoices />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/contacts" element={<Contacts />} />
+              <Route path="/banking" element={<Banking />} />
+              <Route path="*" element={<Home />} />
+            </Routes>
+          </div>
         </div>
       </div>
     </Router>;

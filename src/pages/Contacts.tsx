@@ -182,7 +182,7 @@ export function Contacts() {
     setEditingContactId(null);
     setEditFormData(null);
   };
-  return <div className="max-w-[1200px]">
+  return <div className="w-full">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Contacts</h1>
         <div className="flex items-center gap-4">

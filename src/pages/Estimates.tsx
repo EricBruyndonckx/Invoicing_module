@@ -3,7 +3,7 @@ import { FileTextIcon, CheckCircleIcon, ClockIcon, DollarSignIcon, SearchIcon, C
 import { StatCard } from '../components/StatCard';
 export function Estimates() {
   const [showFilters, setShowFilters] = useState(false);
-  return <div className="max-w-[1200px]">
+  return <div className="w-full">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Estimates</h1>
         {/* Affichage des totaux multi-devises */}

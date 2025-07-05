@@ -224,7 +224,7 @@ export function Dashboard() {
   const weightedOpportunities = salesOpportunities.reduce((acc, opp) => {
     return acc + opp.amount * opp.probability / 100;
   }, 0);
-  return <div className="max-w-[1200px] w-full">
+  return <div className="w-full">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Dashboard Financier</h1>
         <div className="flex items-center gap-4">

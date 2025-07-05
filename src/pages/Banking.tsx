@@ -351,7 +351,7 @@ export function Banking() {
         </div>}
     </div>;
   // Rendu conditionnel selon le mode d'affichage
-  return <div>
+  return <div className="w-full">
       {displayMode === 'list' && renderAccountsList()}
       {displayMode === 'form' && renderAccountForm()}
       {displayMode === 'ebics-setup' && renderEbicsSetup()}

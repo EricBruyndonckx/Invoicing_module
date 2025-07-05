@@ -41,7 +41,7 @@ export function Invoices() {
       isPositive: false
     }
   }];
-  return <div className="max-w-[1200px]">
+  return <div className="w-full">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Invoices</h1>
         {/* Affichage des totaux multi-devises */}
@@ -64,12 +64,10 @@ export function Invoices() {
           </button>
         </div>
       </div>
-
       {/* Tableau de bord statistique */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {stats.map((stat, index) => <StatCard key={index} title={stat.title} value={stat.value} icon={stat.icon} color={stat.color} trend={stat.trend} />)}
       </div>
-
       {/* Panneau de filtres avancés */}
       {showFilters && <div className="bg-white p-6 rounded-md shadow-md border mb-4 relative">
           <button className="absolute top-4 right-4 text-gray-400 hover:text-gray-600" onClick={() => setShowFilters(false)}>
@@ -139,7 +137,6 @@ export function Invoices() {
             </div>
           </div>
         </div>}
-
       {/* Filters and Export Row */}
       <div className="flex justify-between items-center mb-4 bg-white p-3 rounded-md shadow-sm border">
         <div className="flex items-center gap-3">
@@ -160,7 +157,6 @@ export function Invoices() {
           <span>Export Excel</span>
         </button>
       </div>
-
       {/* Table */}
       <div className="bg-white rounded-md shadow-sm border overflow-hidden">
         <table className="w-full">
