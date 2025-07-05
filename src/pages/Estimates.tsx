@@ -3,6 +3,53 @@ import { FileTextIcon, CheckCircleIcon, ClockIcon, DollarSignIcon, SearchIcon, C
 import { StatCard } from '../components/StatCard';
 export function Estimates() {
   const [showFilters, setShowFilters] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('All statuses');
+  // Données statistiques (simulées)
+  const stats = [{
+    title: 'Total Estimates',
+    value: '24',
+    icon: <FileTextIcon size={20} color="white" />,
+    color: 'bg-blue-500',
+    trend: {
+      value: '8%',
+      isPositive: true
+    },
+    filter: 'All'
+  }, {
+    title: 'Total Value',
+    value: '$12,450',
+    icon: <DollarSignIcon size={20} color="white" />,
+    color: 'bg-green-500',
+    trend: {
+      value: '12%',
+      isPositive: true
+    },
+    filter: 'All'
+  }, {
+    title: 'Conversion Rate',
+    value: '68%',
+    icon: <CheckCircleIcon size={20} color="white" />,
+    color: 'bg-purple-500',
+    trend: {
+      value: '5%',
+      isPositive: true
+    },
+    filter: 'Accepted'
+  }, {
+    title: 'Pending Approval',
+    value: '7',
+    icon: <ClockIcon size={20} color="white" />,
+    color: 'bg-amber-500',
+    trend: {
+      value: '2%',
+      isPositive: false
+    },
+    filter: 'Pending'
+  }];
+  // Fonction pour filtrer par statut
+  const handleFilterByStatus = status => {
+    setStatusFilter(status === statusFilter ? 'All statuses' : status);
+  };
   return <div className="w-full">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Estimates</h1>
@@ -28,22 +75,7 @@ export function Estimates() {
       </div>
       {/* Stats Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard title="Total Estimates" value="24" icon={<FileTextIcon size={20} color="white" />} color="bg-blue-500" trend={{
-        value: '8%',
-        isPositive: true
-      }} />
-        <StatCard title="Total Value" value="$12,450" icon={<DollarSignIcon size={20} color="white" />} color="bg-green-500" trend={{
-        value: '12%',
-        isPositive: true
-      }} />
-        <StatCard title="Conversion Rate" value="68%" icon={<CheckCircleIcon size={20} color="white" />} color="bg-purple-500" trend={{
-        value: '5%',
-        isPositive: true
-      }} />
-        <StatCard title="Pending Approval" value="7" icon={<ClockIcon size={20} color="white" />} color="bg-amber-500" trend={{
-        value: '2%',
-        isPositive: false
-      }} />
+        {stats.map((stat, index) => <StatCard key={index} title={stat.title} value={stat.value} icon={stat.icon} color={stat.color} trend={stat.trend} onClick={() => handleFilterByStatus(stat.filter)} isActive={statusFilter === stat.filter} />)}
       </div>
       {/* Panneau de filtres avancés */}
       {showFilters && <div className="bg-white p-6 rounded-md shadow-md border mb-4 relative">
@@ -55,13 +87,14 @@ export function Estimates() {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Status:
               </label>
-              <select className="w-full border rounded-md px-3 py-2">
+              <select className="w-full border rounded-md px-3 py-2" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
                 <option>All statuses</option>
                 <option>Draft</option>
                 <option>Sent</option>
                 <option>Accepted</option>
                 <option>Declined</option>
                 <option>Expired</option>
+                <option>Pending</option>
               </select>
             </div>
             <div>
@@ -109,7 +142,7 @@ export function Estimates() {
               </div>
             </div>
             <div className="flex items-end">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" onClick={() => setStatusFilter('All statuses')}>
                 Clear
               </button>
             </div>
@@ -119,8 +152,14 @@ export function Estimates() {
       <div className="flex justify-between items-center mb-4 bg-white p-3 rounded-md shadow-sm border">
         <div className="flex items-center gap-3">
           <span className="font-medium">Filters:</span>
-          <select className="border rounded px-2 py-1 text-sm">
+          <select className="border rounded px-2 py-1 text-sm" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
             <option>All statuses</option>
+            <option>Draft</option>
+            <option>Sent</option>
+            <option>Accepted</option>
+            <option>Declined</option>
+            <option>Expired</option>
+            <option>Pending</option>
           </select>
           <select className="border rounded px-2 py-1 text-sm">
             <option>All dates</option>
@@ -128,6 +167,15 @@ export function Estimates() {
           <select className="border rounded px-2 py-1 text-sm">
             <option>All clients</option>
           </select>
+          {statusFilter !== 'All statuses' && <div className="flex items-center gap-1 ml-2">
+              <span className="text-sm">Filtered by:</span>
+              <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium flex items-center">
+                {statusFilter}
+                <button className="ml-1 text-blue-500 hover:text-blue-700" onClick={() => setStatusFilter('All statuses')}>
+                  <XIcon size={14} />
+                </button>
+              </span>
+            </div>}
         </div>
         {/* Bouton d'export Excel avec libellé */}
         <button className="flex items-center gap-2 text-gray-600 hover:text-blue-600 border px-3 py-1.5 rounded">
@@ -166,6 +214,12 @@ export function Estimates() {
               </th>
               <th className="text-left p-4 font-medium">
                 <div className="flex items-center">
+                  Currency
+                  <ChevronDownIcon size={16} className="ml-1" />
+                </div>
+              </th>
+              <th className="text-left p-4 font-medium">
+                <div className="flex items-center">
                   Amount
                   <ChevronDownIcon size={16} className="ml-1" />
                 </div>
@@ -174,7 +228,7 @@ export function Estimates() {
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b hover:bg-gray-50">
+            <tr className={`border-b hover:bg-gray-50 ${statusFilter !== 'All statuses' && statusFilter !== 'Accepted' ? 'hidden' : ''}`}>
               <td className="p-4">
                 <span className="bg-green-100 text-green-600 px-3 py-1 rounded-md text-sm">
                   Accepted
@@ -183,7 +237,8 @@ export function Estimates() {
               <td className="p-4">2025-05-15</td>
               <td className="p-4">EST-1003</td>
               <td className="p-4">Acme Corp</td>
-              <td className="p-4">5,200.00 CHF</td>
+              <td className="p-4">CHF</td>
+              <td className="p-4">5,200.00</td>
               <td className="p-4">
                 <div className="flex space-x-2">
                   <button className="text-gray-400 hover:text-blue-500" title="Edit">
@@ -198,7 +253,7 @@ export function Estimates() {
                 </div>
               </td>
             </tr>
-            <tr className="border-b hover:bg-gray-50">
+            <tr className={`border-b hover:bg-gray-50 ${statusFilter !== 'All statuses' && statusFilter !== 'Pending' ? 'hidden' : ''}`}>
               <td className="p-4">
                 <span className="bg-amber-100 text-amber-600 px-3 py-1 rounded-md text-sm">
                   Pending
@@ -207,7 +262,8 @@ export function Estimates() {
               <td className="p-4">2025-05-10</td>
               <td className="p-4">EST-1002</td>
               <td className="p-4">Tech Solutions</td>
-              <td className="p-4">3,450.00 CHF</td>
+              <td className="p-4">CHF</td>
+              <td className="p-4">3,450.00</td>
               <td className="p-4">
                 <div className="flex space-x-2">
                   <button className="text-gray-400 hover:text-blue-500" title="Edit">
@@ -222,7 +278,7 @@ export function Estimates() {
                 </div>
               </td>
             </tr>
-            <tr className="border-b hover:bg-gray-50">
+            <tr className={`border-b hover:bg-gray-50 ${statusFilter !== 'All statuses' && statusFilter !== 'Sent' ? 'hidden' : ''}`}>
               <td className="p-4">
                 <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-md text-sm">
                   Sent
@@ -231,7 +287,8 @@ export function Estimates() {
               <td className="p-4">2025-05-08</td>
               <td className="p-4">EST-1001</td>
               <td className="p-4">Global Services</td>
-              <td className="p-4">2,120.50 EUR</td>
+              <td className="p-4">EUR</td>
+              <td className="p-4">2,120.50</td>
               <td className="p-4">
                 <div className="flex space-x-2">
                   <button className="text-gray-400 hover:text-blue-500" title="Edit">
@@ -246,7 +303,7 @@ export function Estimates() {
                 </div>
               </td>
             </tr>
-            <tr className="border-b hover:bg-gray-50">
+            <tr className={`border-b hover:bg-gray-50 ${statusFilter !== 'All statuses' && statusFilter !== 'Declined' ? 'hidden' : ''}`}>
               <td className="p-4">
                 <span className="bg-red-100 text-red-600 px-3 py-1 rounded-md text-sm">
                   Declined
@@ -255,7 +312,8 @@ export function Estimates() {
               <td className="p-4">2025-05-05</td>
               <td className="p-4">EST-1000</td>
               <td className="p-4">XYZ Industries</td>
-              <td className="p-4">3,800.00 CHF</td>
+              <td className="p-4">CHF</td>
+              <td className="p-4">3,800.00</td>
               <td className="p-4">
                 <div className="flex space-x-2">
                   <button className="text-gray-400 hover:text-blue-500" title="Edit">

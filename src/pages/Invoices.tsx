@@ -3,6 +3,7 @@ import { SearchIcon, ChevronDownIcon, FileSpreadsheetIcon, XIcon, PencilIcon, Co
 import { StatCard } from '../components/StatCard';
 export function Invoices() {
   const [showFilters, setShowFilters] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('All statuses');
   // Données statistiques (simulées)
   const stats = [{
     title: 'Overdue invoices',
@@ -12,7 +13,8 @@ export function Invoices() {
     trend: {
       value: '2',
       isPositive: false
-    }
+    },
+    filter: 'Overdue'
   }, {
     title: 'Invoices paid',
     value: '24',
@@ -21,7 +23,8 @@ export function Invoices() {
     trend: {
       value: '5',
       isPositive: true
-    }
+    },
+    filter: 'Paid'
   }, {
     title: 'Invoices sent',
     value: '12',
@@ -30,7 +33,8 @@ export function Invoices() {
     trend: {
       value: '3',
       isPositive: true
-    }
+    },
+    filter: 'Sent'
   }, {
     title: 'Upcoming deadline',
     value: '7',
@@ -39,8 +43,13 @@ export function Invoices() {
     trend: {
       value: '1',
       isPositive: false
-    }
+    },
+    filter: 'Pending'
   }];
+  // Fonction pour filtrer par statut
+  const handleFilterByStatus = status => {
+    setStatusFilter(status === statusFilter ? 'All statuses' : status);
+  };
   return <div className="w-full">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Invoices</h1>
@@ -66,7 +75,7 @@ export function Invoices() {
       </div>
       {/* Tableau de bord statistique */}
       <div className="grid grid-cols-4 gap-4 mb-6">
-        {stats.map((stat, index) => <StatCard key={index} title={stat.title} value={stat.value} icon={stat.icon} color={stat.color} trend={stat.trend} />)}
+        {stats.map((stat, index) => <StatCard key={index} title={stat.title} value={stat.value} icon={stat.icon} color={stat.color} trend={stat.trend} onClick={() => handleFilterByStatus(stat.filter)} />)}
       </div>
       {/* Panneau de filtres avancés */}
       {showFilters && <div className="bg-white p-6 rounded-md shadow-md border mb-4 relative">
@@ -78,12 +87,13 @@ export function Invoices() {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Status:
               </label>
-              <select className="w-full border rounded-md px-3 py-2">
+              <select className="w-full border rounded-md px-3 py-2" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
                 <option>All statuses</option>
                 <option>Draft</option>
                 <option>Sent</option>
                 <option>Paid</option>
                 <option>Overdue</option>
+                <option>Pending</option>
               </select>
             </div>
             <div>
@@ -131,7 +141,7 @@ export function Invoices() {
               </div>
             </div>
             <div className="flex items-end">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" onClick={() => setStatusFilter('All statuses')}>
                 Clear
               </button>
             </div>
@@ -141,8 +151,13 @@ export function Invoices() {
       <div className="flex justify-between items-center mb-4 bg-white p-3 rounded-md shadow-sm border">
         <div className="flex items-center gap-3">
           <span className="font-medium">Filters:</span>
-          <select className="border rounded px-2 py-1 text-sm">
+          <select className="border rounded px-2 py-1 text-sm" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
             <option>All statuses</option>
+            <option>Draft</option>
+            <option>Sent</option>
+            <option>Paid</option>
+            <option>Overdue</option>
+            <option>Pending</option>
           </select>
           <select className="border rounded px-2 py-1 text-sm">
             <option>All dates</option>
@@ -150,6 +165,15 @@ export function Invoices() {
           <select className="border rounded px-2 py-1 text-sm">
             <option>All clients</option>
           </select>
+          {statusFilter !== 'All statuses' && <div className="flex items-center gap-1 ml-2">
+              <span className="text-sm">Filtered by:</span>
+              <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium flex items-center">
+                {statusFilter}
+                <button className="ml-1 text-blue-500 hover:text-blue-700" onClick={() => setStatusFilter('All statuses')}>
+                  <XIcon size={14} />
+                </button>
+              </span>
+            </div>}
         </div>
         {/* Bouton d'export Excel avec libellé */}
         <button className="flex items-center gap-2 text-gray-600 hover:text-blue-600 border px-3 py-1.5 rounded">
@@ -188,6 +212,12 @@ export function Invoices() {
               </th>
               <th className="text-left p-4 font-medium">
                 <div className="flex items-center">
+                  Currency
+                  <ChevronDownIcon size={16} className="ml-1" />
+                </div>
+              </th>
+              <th className="text-left p-4 font-medium">
+                <div className="flex items-center">
                   Amount
                   <ChevronDownIcon size={16} className="ml-1" />
                 </div>
@@ -196,7 +226,7 @@ export function Invoices() {
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b hover:bg-gray-50">
+            <tr className={`border-b hover:bg-gray-50 ${statusFilter !== 'All statuses' && statusFilter !== 'Paid' ? 'hidden' : ''}`}>
               <td className="p-4">
                 <span className="bg-green-100 text-green-600 px-3 py-1 rounded-md text-sm">
                   Paid
@@ -205,7 +235,8 @@ export function Invoices() {
               <td className="p-4">2025-04-20</td>
               <td className="p-4">2003</td>
               <td className="p-4">Acme Corp</td>
-              <td className="p-4">2 500.00 EUR</td>
+              <td className="p-4">EUR</td>
+              <td className="p-4">2 500.00</td>
               <td className="p-4">
                 <div className="flex space-x-2">
                   <button className="text-gray-400 hover:text-blue-500" title="Edit">
@@ -220,7 +251,7 @@ export function Invoices() {
                 </div>
               </td>
             </tr>
-            <tr className="border-b hover:bg-gray-50">
+            <tr className={`border-b hover:bg-gray-50 ${statusFilter !== 'All statuses' && statusFilter !== 'Overdue' ? 'hidden' : ''}`}>
               <td className="p-4">
                 <span className="bg-red-100 text-red-600 px-3 py-1 rounded-md text-sm">
                   Overdue
@@ -229,7 +260,8 @@ export function Invoices() {
               <td className="p-4">2025-04-10</td>
               <td className="p-4">2002</td>
               <td className="p-4">Tech Solutions</td>
-              <td className="p-4">3 450.00 CHF</td>
+              <td className="p-4">CHF</td>
+              <td className="p-4">3 450.00</td>
               <td className="p-4">
                 <div className="flex space-x-2">
                   <button className="text-gray-400 hover:text-blue-500" title="Edit">
@@ -244,7 +276,7 @@ export function Invoices() {
                 </div>
               </td>
             </tr>
-            <tr className="border-b hover:bg-gray-50">
+            <tr className={`border-b hover:bg-gray-50 ${statusFilter !== 'All statuses' && statusFilter !== 'Sent' ? 'hidden' : ''}`}>
               <td className="p-4">
                 <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-md text-sm">
                   Sent
@@ -253,7 +285,8 @@ export function Invoices() {
               <td className="p-4">2025-03-15</td>
               <td className="p-4">2001</td>
               <td className="p-4">Global Services</td>
-              <td className="p-4">620.50 EUR</td>
+              <td className="p-4">EUR</td>
+              <td className="p-4">620.50</td>
               <td className="p-4">
                 <div className="flex space-x-2">
                   <button className="text-gray-400 hover:text-blue-500" title="Edit">
